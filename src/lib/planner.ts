@@ -3,6 +3,11 @@
  */
 import { TEMPLATES_BY_COUNT, getWorkout, WORKOUTS } from '../data/workouts'
 import {
+  LOADED_SWAPS,
+  getExercise,
+  type Equipment,
+} from '../data/exercises'
+import {
   getJson,
   loadSettings,
   setJson,
@@ -13,6 +18,44 @@ import {
   type SessionSlot,
   type WeekPlan,
 } from './storage'
+
+/** Filter / upgrade prescriptions to match Settings equipment. */
+export function adaptPrescriptions(
+  list: Prescription[],
+  equipment: Equipment,
+): Prescription[] {
+  const out: Prescription[] = []
+  for (const p of list) {
+    let id = p.exerciseId
+    if (equipment === 'light-db-kb' && LOADED_SWAPS[id]) {
+      id = LOADED_SWAPS[id]!
+    }
+    const ex = getExercise(id)
+    if (!ex) continue
+    if (equipment === 'bodyweight' && ex.equipment === 'light-db-kb') {
+      const fb = ex.fallbackId ? getExercise(ex.fallbackId) : undefined
+      if (!fb) continue
+      out.push({
+        ...p,
+        exerciseId: fb.id,
+        mode: fb.mode,
+        workUnit: fb.workUnit,
+      })
+      continue
+    }
+    if (id !== p.exerciseId) {
+      out.push({
+        ...p,
+        exerciseId: id,
+        mode: ex.mode,
+        workUnit: ex.workUnit,
+      })
+      continue
+    }
+    out.push(p)
+  }
+  return out
+}
 
 const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -114,7 +157,10 @@ function applyConsecutiveHardSoftening(
             theme: softTpl.theme,
             workoutId: softTpl.id,
             label: softTpl.name,
-            prescriptions: softTpl.prescriptions.map((p) => ({ ...p })),
+            prescriptions: adaptPrescriptions(
+              softTpl.prescriptions.map((p) => ({ ...p })),
+              loadSettings().equipment,
+            ),
             softWarn: SOFT_WARN_CONSECUTIVE_HARD,
           }
         }
@@ -147,7 +193,10 @@ function buildSlots(n: 2 | 3 | 4, weekSeed: string): SessionSlot[] {
       label: w.name,
       dayType: types[i] ?? w.dayType,
       theme: themes[i] ?? w.theme,
-      prescriptions: w.prescriptions.map((p) => ({ ...p })),
+      prescriptions: adaptPrescriptions(
+        w.prescriptions.map((p) => ({ ...p })),
+        loadSettings().equipment,
+      ),
       softWarn: null,
     }
   })
@@ -164,6 +213,7 @@ export function generateWeekPlan(sessionsPerWeek?: 2 | 3 | 4): WeekPlan {
   return {
     weekSeed,
     sessionsPerWeek: n,
+    equipment: settings.equipment,
     sessions,
     backToBackWarning: hasBackToBack(days),
     consecutiveHardWarning: hasConsecutiveHard(sessions),
@@ -184,6 +234,7 @@ export function loadOrCreateWeekPlan(): WeekPlan {
     stored &&
     stored.weekSeed === weekSeed &&
     stored.sessionsPerWeek === settings.sessionsPerWeek &&
+    (stored.equipment ?? 'bodyweight') === settings.equipment &&
     stored.sessions.every((s) => Array.isArray(s.prescriptions) && s.dayType)
   ) {
     if (override && override.weekSeed === weekSeed) {
@@ -247,7 +298,10 @@ export function swapSessionWorkout(sessionId: string, workoutId: string): WeekPl
           label: w.name,
           dayType: w.dayType,
           theme: w.theme,
-          prescriptions: w.prescriptions.map((p) => ({ ...p })),
+          prescriptions: adaptPrescriptions(
+            w.prescriptions.map((p) => ({ ...p })),
+            loadSettings().equipment,
+          ),
         }
       : s,
   )

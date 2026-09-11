@@ -1,4 +1,4 @@
-import type { PhaseMode } from '../data/exercises'
+import type { Equipment, PhaseMode } from '../data/exercises'
 
 const PREFIX = 'homeice.'
 
@@ -32,22 +32,28 @@ export function weekSeedKey(d = new Date()): string {
 
 export interface Settings {
   sessionsPerWeek: 2 | 3 | 4
+  equipment: Equipment
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   sessionsPerWeek: 2,
+  equipment: 'bodyweight',
 }
 
 export function loadSettings(): Settings {
   const s = getJson<Partial<Settings>>('settings', {})
   const n = s.sessionsPerWeek
-  if (n === 2 || n === 3 || n === 4) return { sessionsPerWeek: n }
-  return { ...DEFAULT_SETTINGS }
+  const equipment: Equipment = s.equipment === 'light-db-kb' ? 'light-db-kb' : 'bodyweight'
+  return {
+    sessionsPerWeek: n === 2 || n === 3 || n === 4 ? n : DEFAULT_SETTINGS.sessionsPerWeek,
+    equipment,
+  }
 }
 
 export function saveSettings(s: Settings): void {
   setJson('settings', s)
   setJson('settings.sessionsPerWeek', s.sessionsPerWeek)
+  setJson('settings.equipment', s.equipment)
 }
 
 export type DayType = 'HARD' | 'SOFT'
@@ -79,6 +85,7 @@ export interface SessionSlot {
 export interface WeekPlan {
   weekSeed: string
   sessionsPerWeek: number
+  equipment?: Equipment
   sessions: SessionSlot[]
   /** true if plan has back-to-back calendar days (any type) */
   backToBackWarning: boolean

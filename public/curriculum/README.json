@@ -1,1 +1,3 @@
-{"note":"Carl HomeIce curriculum index. Full exercise cards live in src/data/exercises.ts; this JSON mirrors the Cecil id list + pools."}
+{
+  "note": "Carl HomeIce curriculum v3 (29 exercises). Full cards live in src/data/exercises.ts. youtubeUrl fields are Carl's listed Shorts only (7)."
+}

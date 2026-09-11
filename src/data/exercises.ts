@@ -1,6 +1,6 @@
 /**
- * Carl HomeIce exercise library — all 22 Cecil-index ids.
- * Source: curriculum/01-exercise-library.md
+ * Carl HomeIce exercise library — 29 ids (curriculum v3).
+ * YouTube Shorts are Carl's listed youtubeUrl fills only.
  */
 
 export type ExercisePool =
@@ -13,7 +13,7 @@ export type ExercisePool =
   | 'core'
   | 'lower-iso'
 
-/** Demo CSS slot mapping (focus/kind → stick-athlete class demo-${kind}) */
+/** Pace-ball metronome timing key (class demo-${kind} on the demo slot) */
 export type DemoKind =
   | 'landing'
   | 'high-knees'
@@ -25,6 +25,9 @@ export type DemoKind =
   | 'jump'
   | 'core'
   | 'iso'
+
+/** Settings + library filter. light-db-kb includes bodyweight plus loaded moves. */
+export type Equipment = 'bodyweight' | 'light-db-kb'
 
 export type PhaseMode = 'reps' | 'timed' | 'hold'
 
@@ -47,16 +50,24 @@ export interface Exercise {
   mode: PhaseMode
   workUnit: 'reps' | 'sec'
   estSecPerSet: number
-  /** CSS demo animation key */
+  /** CSS pace-ball timing key */
   kind: DemoKind
+  equipment: Equipment
+  youtubeUrl?: string
+  youtubeShortId?: string
+  /** Bodyweight stand-in when Settings equipment is bodyweight */
+  fallbackId?: string
 }
 
 function mapKind(focus: string, id: string): DemoKind {
-  if (id === 'jumping-lunges') return 'lunge'
+  if (id === 'jumping-lunges' || id === 'goblet-reverse-lunge') return 'lunge'
   if (id === 'squat-jumps') return 'jump'
   if (id === 'high-knees') return 'high-knees'
   if (id === 'skater-hops-hold') return 'skate'
   if (id === 'linear-pogos') return 'pogo'
+  if (id === 'copenhagen') return 'core'
+  if (id === 'goblet-squat' || id === 'split-squat-iso' || id === 'db-rdl' || id === 'staggered-rdl')
+    return 'iso'
   if (id.includes('skip')) return 'skip'
   if (
     id === 'lateral-pogos' ||
@@ -93,7 +104,10 @@ function mapKind(focus: string, id: string): DemoKind {
   return 'landing'
 }
 
-const RAW: Omit<Exercise, 'kind' | 'qualityCue' | 'estSecPerSet'>[] = [
+const RAW: Omit<
+  Exercise,
+  'kind' | 'qualityCue' | 'estSecPerSet' | 'equipment' | 'youtubeUrl' | 'youtubeShortId' | 'fallbackId'
+>[] = [
   {
     id: 'snap-downs',
     name: 'Snap Downs',
@@ -602,7 +616,222 @@ const RAW: Omit<Exercise, 'kind' | 'qualityCue' | 'estSecPerSet'>[] = [
     mode: 'hold',
     workUnit: 'sec',
   },
+  {
+    id: 'goblet-squat',
+    name: 'Goblet Squat',
+    focus: 'lower body, light load',
+    pools: ['lower-iso'],
+    cues: [
+      'Hold a light dumbbell or kettlebell at your chest like a mug.',
+      'Feet under you. Toes ahead. Elbows in.',
+      'Sit hips back. Heels stay down. Chest tall.',
+      'Stand up smooth. Do not bounce out of the bottom.',
+      'The weight stays glued to your chest the whole time.',
+    ],
+    demoNotes: 'Front + side. Light goblet squat to a comfy depth. No jump.',
+    safetyStop: 'Stop if heels pop, knees cave, or the weight pulls you forward.',
+    sourceRef: 'carl-v3; yt-yoSPJSJKXYQ',
+    difficulty: 2,
+    extra: false,
+    sets: 3,
+    work: 8,
+    restSec: 40,
+    mode: 'reps',
+    workUnit: 'reps',
+  },
+  {
+    id: 'db-rdl',
+    name: 'Dumbbell RDL',
+    focus: 'hinge, light load',
+    pools: ['lower-iso'],
+    cues: [
+      'Hold light dumbbells in front of your thighs.',
+      'Soft knees. Push your hips back like you are closing a car door.',
+      'The weights slide down your legs. Back stays long.',
+      'Feel the stretch in the back of your legs. Then stand tall.',
+      'Squeeze your seat at the top. Do not shrug.',
+    ],
+    demoNotes: 'Side view. Soft-knee hip hinge, light DBs, long spine.',
+    safetyStop: 'Stop if the low back rounds, weights swing, or knees lock hard.',
+    sourceRef: 'carl-v3; yt-FxGuVxxmaR4',
+    difficulty: 2,
+    extra: false,
+    sets: 3,
+    work: 8,
+    restSec: 40,
+    mode: 'reps',
+    workUnit: 'reps',
+  },
+  {
+    id: 'split-squat-iso',
+    name: 'Split Squat Iso',
+    focus: 'lower body, isometric, light load',
+    pools: ['lower-iso'],
+    cues: [
+      'Step one foot forward. Both feet face ahead.',
+      'Drop the back knee toward the floor. Hover. Hold.',
+      'Front heel down. Tall chest. Hands on hips or hold light weights.',
+      'Breathe. Do not wobble the front knee in.',
+      'Switch legs next set. Short hold is plenty.',
+    ],
+    demoNotes: 'Side view. Static split-squat hold. Optional light DBs.',
+    safetyStop: 'Stop if the front knee caves, heel lifts, or sharp pain.',
+    sourceRef: 'carl-v3; yt-nN4D0OFY-N4',
+    difficulty: 2,
+    extra: false,
+    sets: 2,
+    work: 20,
+    restSec: 40,
+    mode: 'hold',
+    workUnit: 'sec',
+  },
+  {
+    id: 'copenhagen',
+    name: 'Copenhagen (Short Lever)',
+    focus: 'core, adductor',
+    pools: ['core'],
+    cues: [
+      'Sideways. Bottom knee on the floor. Top shin on a sofa or bench.',
+      'Lift your hips. Top inner thigh does the work.',
+      'Ear, shoulder, hip in one line. Short hold.',
+      'Knees-on-sofa is the youth version. Do not chase a long-lever plank.',
+      'Switch sides. Soft landing when you come down.',
+    ],
+    demoNotes: 'Side view. Short-lever adductor side-plank on a sofa. Youth default.',
+    safetyStop: 'Stop if the groin pinches, hip sags, or you cannot breathe.',
+    sourceRef: 'carl-v3',
+    difficulty: 2,
+    extra: true,
+    sets: 2,
+    work: 15,
+    restSec: 30,
+    mode: 'hold',
+    workUnit: 'sec',
+  },
+  {
+    id: 'goblet-reverse-lunge',
+    name: 'Goblet Reverse Lunge',
+    focus: 'lower body, light load',
+    pools: ['hard-linear'],
+    cues: [
+      'Hold a light weight at your chest.',
+      'Step one foot back. Soft front knee. Tall chest.',
+      'Tap the back knee down quiet. Then stand up.',
+      'This is not a jump. Smooth step. Even sides.',
+      'Small step if the room is tight.',
+    ],
+    demoNotes: 'Side view. Goblet hold, reverse lunge, quiet tap, stand.',
+    safetyStop: 'Stop if the front knee caves, you tip forward, or the step is huge.',
+    sourceRef: 'carl-v3',
+    difficulty: 2,
+    extra: true,
+    sets: 3,
+    work: 6,
+    restSec: 45,
+    mode: 'reps',
+    workUnit: 'reps',
+  },
+  {
+    id: 'staggered-rdl',
+    name: 'Staggered RDL',
+    focus: 'hinge, light load',
+    pools: ['lower-iso'],
+    cues: [
+      'One foot a half-step back. Heel of the back foot is light.',
+      'Hold a light dumbbell in each hand, or one in the front-leg side.',
+      'Hips back. Long back. Soft front knee.',
+      'Stand tall. Keep hips square. No twist party.',
+      'Switch the front foot next set.',
+    ],
+    demoNotes: 'Side view. Staggered stance hip hinge, light load, square hips.',
+    safetyStop: 'Stop if the low back rounds, hips spin, or you hop to save balance.',
+    sourceRef: 'carl-v3',
+    difficulty: 2,
+    extra: true,
+    sets: 2,
+    work: 6,
+    restSec: 40,
+    mode: 'reps',
+    workUnit: 'reps',
+  },
+  {
+    id: 'suitcase-carry',
+    name: 'Suitcase Carry',
+    focus: 'core, light load',
+    pools: ['core'],
+    cues: [
+      'Hold one light dumbbell in one hand like a suitcase.',
+      'Stand tall. Do not lean away from the weight.',
+      'Walk slow. Quiet feet. Belly quiet.',
+      'Hallway: down and back. Then switch hands.',
+      'The job is to stay straight, not to go heavy.',
+    ],
+    demoNotes: 'Front view. Single-side farmer carry, tall posture, short shuttle.',
+    safetyStop: 'Stop if you lean hard, shrug the shoulder, or the weight bangs a wall.',
+    sourceRef: 'carl-v3',
+    difficulty: 1,
+    extra: true,
+    sets: 2,
+    work: 20,
+    restSec: 30,
+    mode: 'timed',
+    workUnit: 'sec',
+  },
 ]
+
+/** Carl v3 youtubeUrl fills only — 7 Shorts. Do not invent extras. */
+const CARL_SHORTS: Record<string, string> = {
+  'skater-hops-hold': 'aQV8g678hXU',
+  'lateral-ski-jumps': 'hycutL4he_M',
+  'goblet-squat': 'yoSPJSJKXYQ',
+  'db-rdl': 'FxGuVxxmaR4',
+  'squat-jumps': '03Z6q2VfUW4',
+  'snap-downs': '03Z6q2VfUW4',
+  'split-squat-iso': 'nN4D0OFY-N4',
+}
+
+const LOADED: Record<string, { equipment: Equipment; fallbackId?: string }> = {
+  'goblet-squat': { equipment: 'light-db-kb', fallbackId: 'bodyweight-squat' },
+  'db-rdl': { equipment: 'light-db-kb', fallbackId: 'glute-bridge-march' },
+  'split-squat-iso': { equipment: 'light-db-kb', fallbackId: 'wall-sit' },
+  'goblet-reverse-lunge': { equipment: 'light-db-kb', fallbackId: 'bodyweight-squat' },
+  'staggered-rdl': { equipment: 'light-db-kb', fallbackId: 'single-leg-balance' },
+  'suitcase-carry': { equipment: 'light-db-kb', fallbackId: 'bear-crawl' },
+}
+
+/** When Settings is light-db-kb, auto-plan upgrades these bodyweight ids. */
+export const LOADED_SWAPS: Record<string, string> = {
+  'bodyweight-squat': 'goblet-squat',
+  'wall-sit': 'split-squat-iso',
+  'jumping-lunges': 'goblet-reverse-lunge',
+  'glute-bridge-march': 'db-rdl',
+}
+
+export function youtubeShortIdOf(ex: Pick<Exercise, 'youtubeUrl' | 'youtubeShortId'>): string | undefined {
+  if (ex.youtubeShortId) return ex.youtubeShortId
+  if (!ex.youtubeUrl) return undefined
+  const m = ex.youtubeUrl.match(/(?:shorts\/|watch\?v=|embed\/|youtu\.be\/)([A-Za-z0-9_-]{6,})/)
+  return m?.[1]
+}
+
+export function youtubeWatchUrl(ex: Pick<Exercise, 'youtubeUrl' | 'youtubeShortId'>): string | undefined {
+  if (ex.youtubeUrl) return ex.youtubeUrl
+  const id = youtubeShortIdOf(ex)
+  return id ? `https://www.youtube.com/shorts/${id}` : undefined
+}
+
+export function youtubeEmbedUrl(ex: Pick<Exercise, 'youtubeUrl' | 'youtubeShortId'>): string | undefined {
+  const id = youtubeShortIdOf(ex)
+  return id ? `https://www.youtube-nocookie.com/embed/${id}` : undefined
+}
+
+export function allowsEquipment(ex: Exercise, equipment: Equipment): boolean {
+  return equipment === 'light-db-kb' || ex.equipment === 'bodyweight'
+}
+
+export function visibleExercises(equipment: Equipment): Exercise[] {
+  return EXERCISES.filter((e) => allowsEquipment(e, equipment))
+}
 
 export const EXERCISES: Exercise[] = RAW.map((r) => {
   const kind = mapKind(r.focus, r.id)
@@ -610,7 +839,19 @@ export const EXERCISES: Exercise[] = RAW.map((r) => {
   const workSec =
     r.mode === 'reps' ? Math.max(15, Math.round(r.work * 2.5)) : r.work
   const estSecPerSet = workSec + r.restSec
-  return { ...r, kind, qualityCue, estSecPerSet }
+  const loaded = LOADED[r.id]
+  const shortId = CARL_SHORTS[r.id]
+  return {
+    ...r,
+    kind,
+    qualityCue,
+    estSecPerSet,
+    equipment: loaded?.equipment ?? 'bodyweight',
+    fallbackId: loaded?.fallbackId,
+    ...(shortId
+      ? { youtubeShortId: shortId, youtubeUrl: `https://www.youtube.com/shorts/${shortId}` }
+      : {}),
+  }
 })
 
 export const EXERCISE_IDS = EXERCISES.map((e) => e.id)
@@ -625,10 +866,25 @@ export const POOLS: Record<ExercisePool, string[]> = {
     'chaotic-hops',
     'multi-directional-jumps',
   ],
-  'hard-linear': ['squat-jumps', 'jumping-lunges'],
+  'hard-linear': ['squat-jumps', 'jumping-lunges', 'goblet-reverse-lunge'],
   'hard-lateral': ['skater-hops-hold'],
-  core: ['dead-bug', 'bird-dog', 'glute-bridge-march', 'bear-crawl', 'side-plank-lifts'],
-  'lower-iso': ['wall-sit', 'bodyweight-squat'],
+  core: [
+    'dead-bug',
+    'bird-dog',
+    'glute-bridge-march',
+    'bear-crawl',
+    'side-plank-lifts',
+    'copenhagen',
+    'suitcase-carry',
+  ],
+  'lower-iso': [
+    'wall-sit',
+    'bodyweight-squat',
+    'goblet-squat',
+    'db-rdl',
+    'split-squat-iso',
+    'staggered-rdl',
+  ],
 }
 
 /** Ids Carl said never to auto-pick (should not appear in the 22). */

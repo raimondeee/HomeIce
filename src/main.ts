@@ -4,10 +4,14 @@ import {
   getExercise,
   estimatePrescriptionsMinutes,
   POOL_LABELS,
+  visibleExercises,
+  youtubeEmbedUrl,
+  youtubeWatchUrl,
+  type Equipment,
   type ExercisePool,
   type PhaseMode,
 } from './data/exercises'
-import { WORKOUTS, getWorkout, workoutDurationMin } from './data/workouts'
+import { WORKOUTS, getWorkout } from './data/workouts'
 import {
   loadOrCreateWeekPlan,
   swapSessionWorkout,
@@ -15,6 +19,7 @@ import {
   restGapMessage,
   generateWeekPlan,
   saveWeekPlan,
+  adaptPrescriptions,
   SOFT_WARN_CONSECUTIVE_HARD,
 } from './lib/planner'
 import {
@@ -53,9 +58,9 @@ let librarySwapTarget: string | null = null
 let curriculumNote: string | null = null
 
 void tryLoadCurriculumJson().then((data) => {
-  if (data && typeof data === 'object' && data !== null && 'ids' in data) {
-    const ids = (data as { ids: string[] }).ids
-    curriculumNote = `Carl curriculum loaded (${ids.length} exercises).`
+  if (data && Array.isArray(data.ids)) {
+    const v = data.version ?? 1
+    curriculumNote = `Carl curriculum v${v} loaded (${data.ids.length} exercises).`
     render()
   }
 })
@@ -91,7 +96,10 @@ function startSession(session: SessionSlot): void {
   const prescriptions =
     session.prescriptions?.length > 0
       ? session.prescriptions.map((p) => ({ ...p }))
-      : (getWorkout(session.workoutId)?.prescriptions.map((p) => ({ ...p })) ?? [])
+      : adaptPrescriptions(
+          getWorkout(session.workoutId)?.prescriptions.map((p) => ({ ...p })) ?? [],
+          loadSettings().equipment,
+        )
   if (!prescriptions.length) return
   stopTimer()
   runner = {
@@ -225,14 +233,21 @@ function updateRunnerDom(): void {
   if (el && runner) el.textContent = formatTime(Math.max(0, runner.remaining))
 }
 
-function setSessionsPerWeek(n: 2 | 3 | 4): void {
-  const settings: Settings = { sessionsPerWeek: n }
+function persistPlan(settings: Settings): void {
   saveSettings(settings)
-  const next = generateWeekPlan(n)
+  const next = generateWeekPlan(settings.sessionsPerWeek)
   saveWeekPlan(next)
   localStorage.removeItem('homeice.weekPlanOverride')
   plan = next
   render()
+}
+
+function setSessionsPerWeek(n: 2 | 3 | 4): void {
+  persistPlan({ ...loadSettings(), sessionsPerWeek: n })
+}
+
+function setEquipment(equipment: Equipment): void {
+  persistPlan({ ...loadSettings(), equipment })
 }
 
 /* ——— Renderers ——— */
@@ -334,6 +349,8 @@ function renderHome(): string {
 }
 
 function renderLibrary(): string {
+  const settings = loadSettings()
+  const catalog = visibleExercises(settings.equipment)
   const poolOrder: ExercisePool[] = [
     'warmup',
     'landing',
@@ -346,9 +363,10 @@ function renderLibrary(): string {
   ]
 
   const workoutsHtml = WORKOUTS.map((w) => {
-    const mins = workoutDurationMin(w)
-    const names = w.exerciseIds
-      .map((id) => getExercise(id)?.name ?? id)
+    const adapted = adaptPrescriptions(w.prescriptions, settings.equipment)
+    const mins = estimatePrescriptionsMinutes(adapted)
+    const names = adapted
+      .map((p) => getExercise(p.exerciseId)?.name ?? p.exerciseId)
       .join(' · ')
     return `
       <div class="card workout-card">
@@ -372,7 +390,7 @@ function renderLibrary(): string {
 
   const grouped = poolOrder
     .map((pool) => {
-      const list = EXERCISES.filter((e) => e.pools.includes(pool))
+      const list = catalog.filter((e) => e.pools.includes(pool))
       // avoid dupes across pools: show only if this is the exercise's first listed pool
       const unique = list.filter((e) => e.pools[0] === pool)
       if (!unique.length) return ''
@@ -389,7 +407,9 @@ function renderLibrary(): string {
               <div class="meta">
                 <span class="pill">${rx}</span>
                 <span class="pill">diff ${ex.difficulty}</span>
+                <span class="pill">${ex.equipment === 'light-db-kb' ? 'DB/KB' : 'bodyweight'}</span>
                 <span class="pill">${ex.focus.split(',')[0]}</span>
+                ${ex.youtubeUrl ? '<span class="pill">Short</span>' : ''}
               </div>
               <p class="muted" style="font-size:0.82rem"><strong>Stop:</strong> ${ex.safetyStop}</p>
             </div>
@@ -405,9 +425,9 @@ function renderLibrary(): string {
 
   // Any exercise whose primary pool wasn't listed (shouldn't happen)
   const shown = new Set(
-    poolOrder.flatMap((p) => EXERCISES.filter((e) => e.pools[0] === p).map((e) => e.id)),
+    poolOrder.flatMap((p) => catalog.filter((e) => e.pools[0] === p).map((e) => e.id)),
   )
-  const orphan = EXERCISES.filter((e) => !shown.has(e.id))
+  const orphan = catalog.filter((e) => !shown.has(e.id))
   const orphanHtml =
     orphan.length > 0
       ? `<h3 class="pool-heading">Other</h3>` +
@@ -426,11 +446,11 @@ function renderLibrary(): string {
       librarySwapTarget
         ? `<div class="rest-banner">Pick a Carl sample session to swap into this week's plan, then tap <strong>Use for selected session</strong>.</div>
            <button class="btn btn-ghost" type="button" data-cancel-swap>Cancel swap</button>`
-        : `<p class="muted">Carl sample weeks + full ${EXERCISES.length}-exercise library (pools for the auto-builder).</p>`
+        : `<p class="muted">Carl sample weeks + ${catalog.length} moves for <strong>${settings.equipment === 'light-db-kb' ? 'light DB/KB' : 'bodyweight'}</strong> (of ${EXERCISES.length} in v3).</p>`
     }
     <h3 style="margin-top:18px;font-family:var(--display);color:var(--ice-800)">Sample sessions</h3>
     ${workoutsHtml}
-    <h3 style="margin-top:18px;font-family:var(--display);color:var(--ice-800)">Exercise library · ${EXERCISES.length}</h3>
+    <h3 style="margin-top:18px;font-family:var(--display);color:var(--ice-800)">Exercise library · ${catalog.length}</h3>
     ${grouped}
     ${orphanHtml}
     ${renderNav()}
@@ -466,8 +486,17 @@ function renderSettings(): string {
       }
     </div>
     <div class="card">
+      <h3>Equipment</h3>
+      <p class="muted">Default is bodyweight. Light DB/KB unlocks goblet squats, RDLs, and similar loaded moves in the library and auto-plan.</p>
+      <div class="segment segment-2" role="group" aria-label="Equipment">
+        <button type="button" class="${s.equipment === 'bodyweight' ? 'active' : ''}" data-equip="bodyweight">Bodyweight</button>
+        <button type="button" class="${s.equipment === 'light-db-kb' ? 'active' : ''}" data-equip="light-db-kb">Light DB / KB</button>
+      </div>
+      <p class="muted">Changing equipment regenerates this week's plan.</p>
+    </div>
+    <div class="card">
       <h3>About HomeIce</h3>
-      <p class="muted">Youth hockey dryland · bodyweight · Carl curriculum (${EXERCISES.length} moves). Local-only (<code>homeice.*</code>).</p>
+      <p class="muted">Youth hockey dryland · Carl curriculum v3 (${EXERCISES.length} moves). Offline demos use a pace ball + cues; wired YouTube Shorts embed when Carl listed a URL. Local-only (<code>homeice.*</code>).</p>
       <p class="muted">Week seed: ${weekSeedKey()}</p>
     </div>
     <div class="card">
@@ -479,31 +508,43 @@ function renderSettings(): string {
 }
 
 
-/** Reusable kid-friendly stick athlete — posed via CSS class demo-${kind} */
-function stickAthleteSvg(kind: string): string {
+function renderDemoSlot(
+  ex: NonNullable<ReturnType<typeof getExercise>>,
+  shortCue: string,
+): string {
+  const embed = youtubeEmbedUrl(ex)
+  const watch = youtubeWatchUrl(ex)
+  if (embed && watch) {
+    return `
+    <div class="demo-slot demo-${ex.kind} has-video" aria-label="Movement demo · ${ex.kind}">
+      <span class="demo-label">Demo · ${ex.kind}</span>
+      <div class="demo-stage">
+        <div class="demo-video-wrap">
+          <iframe
+            src="${embed}"
+            title="${ex.name} demo"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+          ></iframe>
+        </div>
+      </div>
+      <div class="demo-name">${ex.name}</div>
+      <p class="demo-cue">${shortCue}</p>
+      <a class="demo-open-short" href="${watch}" target="_blank" rel="noopener noreferrer">Open Short ↗</a>
+    </div>`
+  }
   return `
-    <svg class="stick-athlete demo-${kind}" viewBox="0 0 100 140" aria-hidden="true" focusable="false">
-      <g class="sa-root">
-        <g class="sa-torso-g">
-          <circle class="sa-head" cx="50" cy="22" r="12" />
-          <line class="sa-torso" x1="50" y1="34" x2="50" y2="78" />
-          <g class="sa-arm-l">
-            <line class="sa-limb" x1="50" y1="42" x2="28" y2="62" />
-          </g>
-          <g class="sa-arm-r">
-            <line class="sa-limb" x1="50" y1="42" x2="72" y2="62" />
-          </g>
-          <g class="sa-leg-l">
-            <line class="sa-limb" x1="50" y1="78" x2="34" y2="118" />
-          </g>
-          <g class="sa-leg-r">
-            <line class="sa-limb" x1="50" y1="78" x2="66" y2="118" />
-          </g>
-        </g>
-      </g>
-      <ellipse class="sa-ground" cx="50" cy="124" rx="28" ry="4" />
-    </svg>
-  `
+    <div class="demo-slot demo-${ex.kind}" aria-label="Pace metronome · ${ex.kind}">
+      <span class="demo-label">Demo · ${ex.kind}</span>
+      <div class="demo-stage">
+        <div class="pace-ball" title="Pace metronome" aria-hidden="true"></div>
+      </div>
+      <div class="demo-name">${ex.name}</div>
+      <p class="demo-cue">${shortCue}</p>
+      <p class="demo-note">YouTube Shorts for more moves come later.</p>
+    </div>`
 }
 
 function renderRunner(): string {
@@ -525,15 +566,7 @@ function renderRunner(): string {
       <span class="pill">${phaseTag}</span>
       <span class="pill">${runner.exIndex + 1} / ${runner.prescriptions.length}</span>
     </div>
-    <div class="demo-slot" aria-label="Movement demo · ${ex.kind}">
-      <span class="demo-label">Demo · ${ex.kind}</span>
-      <div class="demo-stage">
-        ${stickAthleteSvg(ex.kind)}
-        <div class="pace-ball" title="Pace metronome" aria-hidden="true"></div>
-      </div>
-      <div class="demo-name">${ex.name}</div>
-      <p class="demo-cue">${shortCue}</p>
-    </div>
+    ${renderDemoSlot(ex, shortCue)}
     <p class="phase-label">${phaseTitle}${runner.phase !== 'rest' ? ` · ${workHint}` : ''}</p>
     <div id="timer-display" class="timer ${runner.phase}">${formatTime(runner.remaining)}</div>
     <div class="progress-dots" aria-hidden="true">
@@ -579,7 +612,7 @@ function render(): void {
 
 app.addEventListener('click', (e) => {
   const t = (e.target as HTMLElement).closest(
-    '[data-nav],[data-start],[data-swap],[data-apply-swap],[data-cancel-swap],[data-spw],[data-skip],[data-next-ex],[data-complete],[data-exit-runner],[data-reset]',
+    '[data-nav],[data-start],[data-swap],[data-apply-swap],[data-cancel-swap],[data-spw],[data-equip],[data-skip],[data-next-ex],[data-complete],[data-exit-runner],[data-reset]',
   ) as HTMLElement | null
   if (!t) return
 
@@ -612,6 +645,10 @@ app.addEventListener('click', (e) => {
   if (t.dataset.spw) {
     const n = Number(t.dataset.spw) as 2 | 3 | 4
     if (n === 2 || n === 3 || n === 4) setSessionsPerWeek(n)
+    return
+  }
+  if (t.dataset.equip === 'bodyweight' || t.dataset.equip === 'light-db-kb') {
+    setEquipment(t.dataset.equip)
     return
   }
   if (t.hasAttribute('data-skip')) {

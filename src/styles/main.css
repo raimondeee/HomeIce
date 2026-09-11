@@ -372,7 +372,12 @@ body {
   align-items: center;
   justify-content: center;
   color: white;
-  padding: 28px 12px 52px;
+  padding: 28px 12px 64px;
+}
+
+.demo-slot.has-video {
+  min-height: 280px;
+  padding: 28px 8px 58px;
 }
 
 .demo-label {
@@ -397,7 +402,7 @@ body {
 
 .demo-name {
   position: absolute;
-  bottom: 28px;
+  bottom: 36px;
   left: 12px;
   right: 12px;
   font-family: var(--display);
@@ -408,7 +413,7 @@ body {
 
 .demo-cue {
   position: absolute;
-  bottom: 8px;
+  bottom: 18px;
   left: 12px;
   right: 12px;
   margin: 0;
@@ -421,10 +426,10 @@ body {
   text-overflow: ellipsis;
 }
 
-/* Pace ball — metronome beside the stick athlete */
+/* Pace ball — offline metronome. Duration is kind-based on .demo-slot.demo-${kind} */
 .pace-ball {
-  width: 28px;
-  height: 28px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.28);
   border: 2px solid rgba(255, 255, 255, 0.7);
@@ -444,652 +449,68 @@ body {
   }
 }
 
-/* Stick athlete — shared SVG silhouette */
-.stick-athlete {
-  width: 88px;
-  height: 124px;
-  overflow: visible;
-  flex-shrink: 0;
+.demo-slot.demo-landing .pace-ball { animation-duration: 1.4s; }
+.demo-slot.demo-high-knees .pace-ball { animation-duration: 0.5s; }
+.demo-slot.demo-pogo .pace-ball { animation-duration: 0.4s; }
+.demo-slot.demo-skip .pace-ball { animation-duration: 0.9s; }
+.demo-slot.demo-skate .pace-ball { animation-duration: 1.6s; }
+.demo-slot.demo-lateral .pace-ball { animation-duration: 0.7s; }
+.demo-slot.demo-lunge .pace-ball { animation-duration: 1.1s; }
+.demo-slot.demo-jump .pace-ball { animation-duration: 1.2s; }
+.demo-slot.demo-core .pace-ball { animation-duration: 1.6s; }
+.demo-slot.demo-iso .pace-ball { animation-duration: 2s; }
+
+.demo-video-wrap {
+  width: min(168px, 46vw);
+  aspect-ratio: 9 / 16;
+  max-height: 210px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
-.stick-athlete .sa-head {
-  fill: #e8f7fa;
-  stroke: rgba(255, 255, 255, 0.9);
-  stroke-width: 2;
+.demo-video-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
 }
 
-.stick-athlete .sa-torso,
-.stick-athlete .sa-limb {
-  stroke: #e8f7fa;
-  stroke-width: 5;
-  stroke-linecap: round;
-  fill: none;
+.demo-open-short {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none;
+  opacity: 0.85;
 }
 
-.stick-athlete .sa-ground {
-  fill: rgba(255, 255, 255, 0.18);
+.demo-open-short:hover {
+  opacity: 1;
+  text-decoration: underline;
 }
 
-.stick-athlete .sa-root,
-.stick-athlete .sa-torso-g,
-.stick-athlete .sa-arm-l,
-.stick-athlete .sa-arm-r,
-.stick-athlete .sa-leg-l,
-.stick-athlete .sa-leg-r {
-  transform-box: view-box;
-  transform-origin: 50px 70px;
+.demo-note {
+  position: absolute;
+  bottom: 4px;
+  left: 12px;
+  right: 12px;
+  margin: 0;
+  font-size: 0.6rem;
+  line-height: 1.2;
+  opacity: 0.55;
+  text-align: center;
 }
 
-.stick-athlete .sa-arm-l,
-.stick-athlete .sa-arm-r {
-  transform-origin: 50px 42px;
+.demo-slot.has-video .demo-name {
+  bottom: 26px;
 }
 
-.stick-athlete .sa-leg-l,
-.stick-athlete .sa-leg-r {
-  transform-origin: 50px 78px;
-}
-
-.stick-athlete .sa-torso-g {
-  transform-origin: 50px 78px;
-}
-
-.stick-athlete .sa-root {
-  transform-origin: 50px 118px;
-}
-
-/* ——— Per-kind stick poses / loops ——— */
-
-/* Landing / snap-down: rise then drop + stick */
-.demo-landing .sa-root {
-  animation: sa-land-body 1.4s ease-in-out infinite;
-}
-.demo-landing .sa-arm-l {
-  animation: sa-land-arm-l 1.4s ease-in-out infinite;
-}
-.demo-landing .sa-arm-r {
-  animation: sa-land-arm-r 1.4s ease-in-out infinite;
-}
-.demo-landing .sa-leg-l,
-.demo-landing .sa-leg-r {
-  animation: sa-land-legs 1.4s ease-in-out infinite;
-}
-.demo-landing ~ .pace-ball,
-.demo-slot:has(.demo-landing) .pace-ball {
-  animation-duration: 1.4s;
-}
-
-@keyframes sa-land-body {
-  0%,
-  15% {
-    transform: translateY(-10px) scaleY(1.04);
-  }
-  45% {
-    transform: translateY(10px) scaleY(0.88);
-  }
-  60%,
-  100% {
-    transform: translateY(6px) scaleY(0.94);
-  }
-}
-@keyframes sa-land-arm-l {
-  0%,
-  15% {
-    transform: rotate(12deg);
-  }
-  45%,
-  100% {
-    transform: rotate(-28deg);
-  }
-}
-@keyframes sa-land-arm-r {
-  0%,
-  15% {
-    transform: rotate(-12deg);
-  }
-  45%,
-  100% {
-    transform: rotate(28deg);
-  }
-}
-@keyframes sa-land-legs {
-  0%,
-  15% {
-    transform: rotate(0deg);
-  }
-  45%,
-  100% {
-    transform: scaleY(0.85);
-  }
-}
-
-/* High knees */
-.demo-high-knees .sa-root {
-  animation: sa-hk-bob 0.5s ease-in-out infinite;
-}
-.demo-high-knees .sa-leg-l {
-  animation: sa-hk-leg-l 0.5s ease-in-out infinite;
-}
-.demo-high-knees .sa-leg-r {
-  animation: sa-hk-leg-r 0.5s ease-in-out infinite;
-}
-.demo-high-knees .sa-arm-l {
-  animation: sa-hk-arm-l 0.5s ease-in-out infinite;
-}
-.demo-high-knees .sa-arm-r {
-  animation: sa-hk-arm-r 0.5s ease-in-out infinite;
-}
-.demo-slot:has(.demo-high-knees) .pace-ball {
-  animation-duration: 0.5s;
-}
-
-@keyframes sa-hk-bob {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-4px);
-  }
-}
-@keyframes sa-hk-leg-l {
-  0%,
-  100% {
-    transform: rotate(-8deg) translateY(0);
-  }
-  50% {
-    transform: rotate(35deg) translate(4px, -18px);
-  }
-}
-@keyframes sa-hk-leg-r {
-  0%,
-  100% {
-    transform: rotate(35deg) translate(-4px, -18px);
-  }
-  50% {
-    transform: rotate(8deg) translateY(0);
-  }
-}
-@keyframes sa-hk-arm-l {
-  0%,
-  100% {
-    transform: rotate(30deg);
-  }
-  50% {
-    transform: rotate(-25deg);
-  }
-}
-@keyframes sa-hk-arm-r {
-  0%,
-  100% {
-    transform: rotate(-25deg);
-  }
-  50% {
-    transform: rotate(30deg);
-  }
-}
-
-/* Linear pogo — stiff ankle bounce */
-.demo-pogo .sa-root {
-  animation: sa-pogo 0.4s ease-in-out infinite;
-}
-.demo-pogo .sa-leg-l,
-.demo-pogo .sa-leg-r {
-  animation: sa-pogo-legs 0.4s ease-in-out infinite;
-}
-.demo-pogo .sa-arm-l {
-  transform: rotate(-22deg);
-}
-.demo-pogo .sa-arm-r {
-  transform: rotate(22deg);
-}
-.demo-slot:has(.demo-pogo) .pace-ball {
-  animation-duration: 0.4s;
-}
-
-@keyframes sa-pogo {
-  0%,
-  100% {
-    transform: translateY(6px) scaleY(0.94);
-  }
-  50% {
-    transform: translateY(-14px) scaleY(1.04);
-  }
-}
-@keyframes sa-pogo-legs {
-  0%,
-  100% {
-    transform: scaleY(0.92);
-  }
-  50% {
-    transform: scaleY(1);
-  }
-}
-
-/* Skip / power-skip */
-.demo-skip .sa-root {
-  animation: sa-skip-body 0.9s ease-in-out infinite;
-}
-.demo-skip .sa-leg-l {
-  animation: sa-skip-leg-l 0.9s ease-in-out infinite;
-}
-.demo-skip .sa-leg-r {
-  animation: sa-skip-leg-r 0.9s ease-in-out infinite;
-}
-.demo-skip .sa-arm-l {
-  animation: sa-skip-arm-l 0.9s ease-in-out infinite;
-}
-.demo-skip .sa-arm-r {
-  animation: sa-skip-arm-r 0.9s ease-in-out infinite;
-}
-.demo-slot:has(.demo-skip) .pace-ball {
-  animation-duration: 0.9s;
-}
-
-@keyframes sa-skip-body {
-  0%,
-  100% {
-    transform: translate(-4px, 4px);
-  }
-  40% {
-    transform: translate(4px, -18px);
-  }
-  70% {
-    transform: translate(6px, 2px);
-  }
-}
-@keyframes sa-skip-leg-l {
-  0%,
-  100% {
-    transform: rotate(-15deg);
-  }
-  40% {
-    transform: rotate(40deg) translate(2px, -12px);
-  }
-}
-@keyframes sa-skip-leg-r {
-  0%,
-  100% {
-    transform: rotate(20deg);
-  }
-  40% {
-    transform: rotate(-25deg);
-  }
-}
-@keyframes sa-skip-arm-l {
-  0%,
-  100% {
-    transform: rotate(25deg);
-  }
-  40% {
-    transform: rotate(-40deg);
-  }
-}
-@keyframes sa-skip-arm-r {
-  0%,
-  100% {
-    transform: rotate(-15deg);
-  }
-  40% {
-    transform: rotate(45deg) translate(0, -8px);
-  }
-}
-
-/* Skater hold — side hop + freeze */
-.demo-skate .sa-root {
-  animation: sa-skate-body 1.6s ease-in-out infinite;
-}
-.demo-skate .sa-leg-l {
-  animation: sa-skate-leg-l 1.6s ease-in-out infinite;
-}
-.demo-skate .sa-leg-r {
-  animation: sa-skate-leg-r 1.6s ease-in-out infinite;
-}
-.demo-skate .sa-arm-l,
-.demo-skate .sa-arm-r {
-  animation: sa-skate-arms 1.6s ease-in-out infinite;
-}
-.demo-slot:has(.demo-skate) .pace-ball {
-  animation-duration: 1.6s;
-}
-
-@keyframes sa-skate-body {
-  0%,
-  20% {
-    transform: translateX(-16px);
-  }
-  35% {
-    transform: translateX(0) translateY(-10px);
-  }
-  50%,
-  90% {
-    transform: translateX(16px);
-  }
-  100% {
-    transform: translateX(-16px);
-  }
-}
-@keyframes sa-skate-leg-l {
-  0%,
-  45% {
-    transform: rotate(0);
-  }
-  50%,
-  90% {
-    transform: rotate(25deg) translate(-6px, -4px);
-  }
-  100% {
-    transform: rotate(0);
-  }
-}
-@keyframes sa-skate-leg-r {
-  0%,
-  20% {
-    transform: rotate(-20deg) translate(4px, -4px);
-  }
-  50%,
-  90% {
-    transform: rotate(0);
-  }
-  100% {
-    transform: rotate(-20deg) translate(4px, -4px);
-  }
-}
-@keyframes sa-skate-arms {
-  0%,
-  100% {
-    transform: rotate(0);
-  }
-  50% {
-    transform: rotate(8deg);
-  }
-}
-
-/* Lateral pogo / ski / chaotic */
-.demo-lateral .sa-root {
-  animation: sa-lat-body 0.7s ease-in-out infinite;
-}
-.demo-lateral .sa-arm-l {
-  animation: sa-lat-arm-l 0.7s ease-in-out infinite;
-}
-.demo-lateral .sa-arm-r {
-  animation: sa-lat-arm-r 0.7s ease-in-out infinite;
-}
-.demo-slot:has(.demo-lateral) .pace-ball {
-  animation-duration: 0.7s;
-}
-
-@keyframes sa-lat-body {
-  0%,
-  100% {
-    transform: translateX(-18px) translateY(4px);
-  }
-  50% {
-    transform: translateX(18px) translateY(4px);
-  }
-  25%,
-  75% {
-    transform: translateX(0) translateY(-10px);
-  }
-}
-@keyframes sa-lat-arm-l {
-  0%,
-  100% {
-    transform: rotate(-30deg);
-  }
-  50% {
-    transform: rotate(20deg);
-  }
-}
-@keyframes sa-lat-arm-r {
-  0%,
-  100% {
-    transform: rotate(20deg);
-  }
-  50% {
-    transform: rotate(-30deg);
-  }
-}
-
-/* Lunge switch */
-.demo-lunge .sa-root {
-  animation: sa-lunge-body 1.1s ease-in-out infinite;
-}
-.demo-lunge .sa-leg-l {
-  animation: sa-lunge-leg-l 1.1s ease-in-out infinite;
-}
-.demo-lunge .sa-leg-r {
-  animation: sa-lunge-leg-r 1.1s ease-in-out infinite;
-}
-.demo-lunge .sa-arm-l {
-  animation: sa-lunge-arm-l 1.1s ease-in-out infinite;
-}
-.demo-lunge .sa-arm-r {
-  animation: sa-lunge-arm-r 1.1s ease-in-out infinite;
-}
-.demo-slot:has(.demo-lunge) .pace-ball {
-  animation-duration: 1.1s;
-}
-
-@keyframes sa-lunge-body {
-  0%,
-  100% {
-    transform: translateY(4px) rotate(-4deg);
-  }
-  45% {
-    transform: translateY(-16px) rotate(0);
-  }
-  55% {
-    transform: translateY(4px) rotate(4deg);
-  }
-}
-@keyframes sa-lunge-leg-l {
-  0%,
-  40% {
-    transform: rotate(-28deg) translate(-4px, 0);
-  }
-  60%,
-  100% {
-    transform: rotate(28deg) translate(4px, 0);
-  }
-}
-@keyframes sa-lunge-leg-r {
-  0%,
-  40% {
-    transform: rotate(28deg) translate(4px, 0);
-  }
-  60%,
-  100% {
-    transform: rotate(-28deg) translate(-4px, 0);
-  }
-}
-@keyframes sa-lunge-arm-l {
-  0%,
-  40% {
-    transform: rotate(25deg);
-  }
-  60%,
-  100% {
-    transform: rotate(-25deg);
-  }
-}
-@keyframes sa-lunge-arm-r {
-  0%,
-  40% {
-    transform: rotate(-25deg);
-  }
-  60%,
-  100% {
-    transform: rotate(25deg);
-  }
-}
-
-/* Squat jump */
-.demo-jump .sa-root {
-  animation: sa-jump-body 1.2s ease-in-out infinite;
-}
-.demo-jump .sa-leg-l,
-.demo-jump .sa-leg-r {
-  animation: sa-jump-legs 1.2s ease-in-out infinite;
-}
-.demo-jump .sa-arm-l {
-  animation: sa-jump-arm-l 1.2s ease-in-out infinite;
-}
-.demo-jump .sa-arm-r {
-  animation: sa-jump-arm-r 1.2s ease-in-out infinite;
-}
-.demo-slot:has(.demo-jump) .pace-ball {
-  animation-duration: 1.2s;
-}
-
-@keyframes sa-jump-body {
-  0%,
-  15% {
-    transform: translateY(10px) scaleY(0.88);
-  }
-  40% {
-    transform: translateY(-22px) scaleY(1.06);
-  }
-  55%,
-  100% {
-    transform: translateY(8px) scaleY(0.92);
-  }
-}
-@keyframes sa-jump-legs {
-  0%,
-  15% {
-    transform: scaleY(0.8);
-  }
-  40% {
-    transform: scaleY(1.05);
-  }
-  55%,
-  100% {
-    transform: scaleY(0.85);
-  }
-}
-@keyframes sa-jump-arm-l {
-  0%,
-  15% {
-    transform: rotate(20deg);
-  }
-  40% {
-    transform: rotate(-35deg);
-  }
-  55%,
-  100% {
-    transform: rotate(15deg);
-  }
-}
-@keyframes sa-jump-arm-r {
-  0%,
-  15% {
-    transform: rotate(-20deg);
-  }
-  40% {
-    transform: rotate(35deg);
-  }
-  55%,
-  100% {
-    transform: rotate(-15deg);
-  }
-}
-
-/* Core holds / marches — gentle pulse + limb reach */
-.demo-core .sa-root {
-  animation: sa-core-body 1.6s ease-in-out infinite;
-}
-.demo-core .sa-arm-l {
-  animation: sa-core-arm-l 1.6s ease-in-out infinite;
-}
-.demo-core .sa-arm-r {
-  animation: sa-core-arm-r 1.6s ease-in-out infinite;
-}
-.demo-core .sa-leg-l {
-  animation: sa-core-leg-l 1.6s ease-in-out infinite;
-}
-.demo-core .sa-leg-r {
-  animation: sa-core-leg-r 1.6s ease-in-out infinite;
-}
-.demo-slot:has(.demo-core) .pace-ball {
-  animation-duration: 1.6s;
-}
-
-@keyframes sa-core-body {
-  0%,
-  100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.03);
-  }
-}
-@keyframes sa-core-arm-l {
-  0%,
-  100% {
-    transform: rotate(-40deg) translate(-2px, -6px);
-  }
-  50% {
-    transform: rotate(-10deg);
-  }
-}
-@keyframes sa-core-arm-r {
-  0%,
-  100% {
-    transform: rotate(10deg);
-  }
-  50% {
-    transform: rotate(40deg) translate(2px, -6px);
-  }
-}
-@keyframes sa-core-leg-l {
-  0%,
-  100% {
-    transform: rotate(10deg);
-  }
-  50% {
-    transform: rotate(-30deg) translate(-2px, -8px);
-  }
-}
-@keyframes sa-core-leg-r {
-  0%,
-  100% {
-    transform: rotate(-30deg) translate(2px, -8px);
-  }
-  50% {
-    transform: rotate(10deg);
-  }
-}
-
-/* Iso holds — squat / wall-sit / balance stillness with micro sway */
-.demo-iso .sa-root {
-  animation: sa-iso-body 2s ease-in-out infinite;
-}
-.demo-iso .sa-leg-l,
-.demo-iso .sa-leg-r {
-  transform: scaleY(0.82);
-}
-.demo-iso .sa-arm-l {
-  transform: rotate(-35deg);
-}
-.demo-iso .sa-arm-r {
-  transform: rotate(35deg);
-}
-.demo-iso .sa-torso-g {
-  transform: translateY(6px);
-}
-.demo-slot:has(.demo-iso) .pace-ball {
-  animation-duration: 2s;
-}
-
-@keyframes sa-iso-body {
-  0%,
-  100% {
-    transform: translateY(8px) scaleY(0.96);
-  }
-  50% {
-    transform: translateY(10px) scaleY(0.94);
-  }
+.demo-slot.has-video .demo-cue {
+  bottom: 6px;
 }
 
 .cue-banner {
@@ -1164,6 +585,14 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 8px;
   margin: 12px 0;
+}
+
+.segment.segment-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+.segment.segment-2 button {
+  font-size: 0.92rem;
 }
 
 .segment button {
