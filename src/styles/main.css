@@ -1,0 +1,1231 @@
+:root {
+  --ice-900: #06252e;
+  --ice-800: #0b3d4a;
+  --ice-700: #0f5263;
+  --ice-600: #1a6b7d;
+  --ice-500: #2a8fa3;
+  --ice-400: #4eb3c5;
+  --ice-300: #8dd4e0;
+  --ice-200: #c5ebf2;
+  --ice-100: #e8f7fa;
+  --ice-50: #f4fcfd;
+  --teal: #14b8a6;
+  --teal-dark: #0d9488;
+  --warn: #d97706;
+  --warn-bg: #fff7ed;
+  --ok: #059669;
+  --ok-bg: #ecfdf5;
+  --danger: #dc2626;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --radius: 16px;
+  --shadow: 0 8px 30px rgba(11, 61, 74, 0.12);
+  --font: 'DM Sans', system-ui, sans-serif;
+  --display: 'Outfit', var(--font);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  font-family: var(--font);
+  color: var(--text);
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #c5ebf2 0%, transparent 55%),
+    radial-gradient(900px 500px at 100% 0%, #a7f3d0 0%, transparent 45%),
+    linear-gradient(180deg, var(--ice-50), #eef6f8 40%, #f8fafc);
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 0 16px 96px;
+  position: relative;
+}
+
+/* Top bar */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0 8px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(180deg, rgba(244, 252, 253, 0.96), rgba(244, 252, 253, 0.75));
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, var(--ice-600), var(--teal));
+  display: grid;
+  place-items: center;
+  color: white;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35);
+}
+
+.brand h1 {
+  margin: 0;
+  font-family: var(--display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ice-800);
+}
+
+.brand .sub {
+  font-size: 0.72rem;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.icon-btn {
+  border: none;
+  background: var(--surface);
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  font-size: 1.15rem;
+  display: grid;
+  place-items: center;
+  color: var(--ice-700);
+}
+
+.icon-btn:active {
+  transform: scale(0.96);
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  margin: 12px 0;
+  border: 1px solid rgba(78, 179, 197, 0.18);
+}
+
+.card h2,
+.card h3 {
+  font-family: var(--display);
+  margin: 0 0 6px;
+  color: var(--ice-800);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--ice-100);
+  color: var(--ice-700);
+}
+
+.pill.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+.pill.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.pill.done {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+
+/* Session list */
+.session-row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.session-num {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, var(--ice-500), var(--ice-700));
+  color: white;
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.session-num.done {
+  background: linear-gradient(145deg, var(--teal), var(--ok));
+}
+
+.session-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-body h3 {
+  font-size: 1rem;
+  margin-bottom: 2px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-family: var(--font);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.15s;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background: linear-gradient(145deg, var(--teal), var(--ice-600));
+  color: white;
+  box-shadow: 0 6px 18px rgba(20, 184, 166, 0.35);
+}
+
+.btn-secondary {
+  background: var(--ice-100);
+  color: var(--ice-800);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ice-700);
+  border: 1px solid rgba(26, 107, 125, 0.25);
+}
+
+.btn-danger {
+  background: #fef2f2;
+  color: var(--danger);
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rest-banner {
+  margin: 8px 0 4px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #e0f2fe, #ecfeff);
+  border-left: 4px solid var(--ice-400);
+  color: var(--ice-800);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+
+.rest-banner.warn {
+  background: var(--warn-bg);
+  border-left-color: var(--warn);
+  color: #92400e;
+}
+
+.week-chip {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+
+/* Bottom nav */
+.nav {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 12px;
+  width: min(440px, calc(100% - 24px));
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(11, 61, 74, 0.18);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  padding: 8px;
+  z-index: 30;
+  border: 1px solid rgba(78, 179, 197, 0.25);
+}
+
+.nav button {
+  border: none;
+  background: transparent;
+  padding: 10px 6px;
+  border-radius: 12px;
+  font-family: var(--font);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.nav button .ico {
+  font-size: 1.2rem;
+}
+
+.nav button.active {
+  background: var(--ice-100);
+  color: var(--ice-800);
+}
+
+/* Runner */
+.runner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.phase-label {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ice-500);
+  margin: 8px 0 0;
+}
+
+.timer {
+  font-family: var(--display);
+  font-size: 4.5rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--ice-800);
+  line-height: 1;
+  margin: 8px 0 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer.rest {
+  color: var(--ice-500);
+}
+
+.timer.hold {
+  color: var(--teal-dark);
+}
+
+.demo-slot {
+  min-height: 200px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, var(--ice-800), var(--ice-600));
+  position: relative;
+  overflow: hidden;
+  margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  padding: 28px 12px 52px;
+}
+
+.demo-label {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  font-size: 0.68rem;
+  opacity: 0.7;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.demo-stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 18px;
+  width: 100%;
+  min-height: 130px;
+  position: relative;
+}
+
+.demo-name {
+  position: absolute;
+  bottom: 28px;
+  left: 12px;
+  right: 12px;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  text-align: center;
+}
+
+.demo-cue {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  right: 12px;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  opacity: 0.85;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Pace ball — metronome beside the stick athlete */
+.pace-ball {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  margin-bottom: 8px;
+  animation: pace-bounce 0.55s ease-in-out infinite;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+@keyframes pace-bounce {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-22px) scale(1.05, 0.95);
+  }
+}
+
+/* Stick athlete — shared SVG silhouette */
+.stick-athlete {
+  width: 88px;
+  height: 124px;
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.stick-athlete .sa-head {
+  fill: #e8f7fa;
+  stroke: rgba(255, 255, 255, 0.9);
+  stroke-width: 2;
+}
+
+.stick-athlete .sa-torso,
+.stick-athlete .sa-limb {
+  stroke: #e8f7fa;
+  stroke-width: 5;
+  stroke-linecap: round;
+  fill: none;
+}
+
+.stick-athlete .sa-ground {
+  fill: rgba(255, 255, 255, 0.18);
+}
+
+.stick-athlete .sa-root,
+.stick-athlete .sa-torso-g,
+.stick-athlete .sa-arm-l,
+.stick-athlete .sa-arm-r,
+.stick-athlete .sa-leg-l,
+.stick-athlete .sa-leg-r {
+  transform-box: view-box;
+  transform-origin: 50px 70px;
+}
+
+.stick-athlete .sa-arm-l,
+.stick-athlete .sa-arm-r {
+  transform-origin: 50px 42px;
+}
+
+.stick-athlete .sa-leg-l,
+.stick-athlete .sa-leg-r {
+  transform-origin: 50px 78px;
+}
+
+.stick-athlete .sa-torso-g {
+  transform-origin: 50px 78px;
+}
+
+.stick-athlete .sa-root {
+  transform-origin: 50px 118px;
+}
+
+/* ——— Per-kind stick poses / loops ——— */
+
+/* Landing / snap-down: rise then drop + stick */
+.demo-landing .sa-root {
+  animation: sa-land-body 1.4s ease-in-out infinite;
+}
+.demo-landing .sa-arm-l {
+  animation: sa-land-arm-l 1.4s ease-in-out infinite;
+}
+.demo-landing .sa-arm-r {
+  animation: sa-land-arm-r 1.4s ease-in-out infinite;
+}
+.demo-landing .sa-leg-l,
+.demo-landing .sa-leg-r {
+  animation: sa-land-legs 1.4s ease-in-out infinite;
+}
+.demo-landing ~ .pace-ball,
+.demo-slot:has(.demo-landing) .pace-ball {
+  animation-duration: 1.4s;
+}
+
+@keyframes sa-land-body {
+  0%,
+  15% {
+    transform: translateY(-10px) scaleY(1.04);
+  }
+  45% {
+    transform: translateY(10px) scaleY(0.88);
+  }
+  60%,
+  100% {
+    transform: translateY(6px) scaleY(0.94);
+  }
+}
+@keyframes sa-land-arm-l {
+  0%,
+  15% {
+    transform: rotate(12deg);
+  }
+  45%,
+  100% {
+    transform: rotate(-28deg);
+  }
+}
+@keyframes sa-land-arm-r {
+  0%,
+  15% {
+    transform: rotate(-12deg);
+  }
+  45%,
+  100% {
+    transform: rotate(28deg);
+  }
+}
+@keyframes sa-land-legs {
+  0%,
+  15% {
+    transform: rotate(0deg);
+  }
+  45%,
+  100% {
+    transform: scaleY(0.85);
+  }
+}
+
+/* High knees */
+.demo-high-knees .sa-root {
+  animation: sa-hk-bob 0.5s ease-in-out infinite;
+}
+.demo-high-knees .sa-leg-l {
+  animation: sa-hk-leg-l 0.5s ease-in-out infinite;
+}
+.demo-high-knees .sa-leg-r {
+  animation: sa-hk-leg-r 0.5s ease-in-out infinite;
+}
+.demo-high-knees .sa-arm-l {
+  animation: sa-hk-arm-l 0.5s ease-in-out infinite;
+}
+.demo-high-knees .sa-arm-r {
+  animation: sa-hk-arm-r 0.5s ease-in-out infinite;
+}
+.demo-slot:has(.demo-high-knees) .pace-ball {
+  animation-duration: 0.5s;
+}
+
+@keyframes sa-hk-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes sa-hk-leg-l {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(35deg) translate(4px, -18px);
+  }
+}
+@keyframes sa-hk-leg-r {
+  0%,
+  100% {
+    transform: rotate(35deg) translate(-4px, -18px);
+  }
+  50% {
+    transform: rotate(8deg) translateY(0);
+  }
+}
+@keyframes sa-hk-arm-l {
+  0%,
+  100% {
+    transform: rotate(30deg);
+  }
+  50% {
+    transform: rotate(-25deg);
+  }
+}
+@keyframes sa-hk-arm-r {
+  0%,
+  100% {
+    transform: rotate(-25deg);
+  }
+  50% {
+    transform: rotate(30deg);
+  }
+}
+
+/* Linear pogo — stiff ankle bounce */
+.demo-pogo .sa-root {
+  animation: sa-pogo 0.4s ease-in-out infinite;
+}
+.demo-pogo .sa-leg-l,
+.demo-pogo .sa-leg-r {
+  animation: sa-pogo-legs 0.4s ease-in-out infinite;
+}
+.demo-pogo .sa-arm-l {
+  transform: rotate(-22deg);
+}
+.demo-pogo .sa-arm-r {
+  transform: rotate(22deg);
+}
+.demo-slot:has(.demo-pogo) .pace-ball {
+  animation-duration: 0.4s;
+}
+
+@keyframes sa-pogo {
+  0%,
+  100% {
+    transform: translateY(6px) scaleY(0.94);
+  }
+  50% {
+    transform: translateY(-14px) scaleY(1.04);
+  }
+}
+@keyframes sa-pogo-legs {
+  0%,
+  100% {
+    transform: scaleY(0.92);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* Skip / power-skip */
+.demo-skip .sa-root {
+  animation: sa-skip-body 0.9s ease-in-out infinite;
+}
+.demo-skip .sa-leg-l {
+  animation: sa-skip-leg-l 0.9s ease-in-out infinite;
+}
+.demo-skip .sa-leg-r {
+  animation: sa-skip-leg-r 0.9s ease-in-out infinite;
+}
+.demo-skip .sa-arm-l {
+  animation: sa-skip-arm-l 0.9s ease-in-out infinite;
+}
+.demo-skip .sa-arm-r {
+  animation: sa-skip-arm-r 0.9s ease-in-out infinite;
+}
+.demo-slot:has(.demo-skip) .pace-ball {
+  animation-duration: 0.9s;
+}
+
+@keyframes sa-skip-body {
+  0%,
+  100% {
+    transform: translate(-4px, 4px);
+  }
+  40% {
+    transform: translate(4px, -18px);
+  }
+  70% {
+    transform: translate(6px, 2px);
+  }
+}
+@keyframes sa-skip-leg-l {
+  0%,
+  100% {
+    transform: rotate(-15deg);
+  }
+  40% {
+    transform: rotate(40deg) translate(2px, -12px);
+  }
+}
+@keyframes sa-skip-leg-r {
+  0%,
+  100% {
+    transform: rotate(20deg);
+  }
+  40% {
+    transform: rotate(-25deg);
+  }
+}
+@keyframes sa-skip-arm-l {
+  0%,
+  100% {
+    transform: rotate(25deg);
+  }
+  40% {
+    transform: rotate(-40deg);
+  }
+}
+@keyframes sa-skip-arm-r {
+  0%,
+  100% {
+    transform: rotate(-15deg);
+  }
+  40% {
+    transform: rotate(45deg) translate(0, -8px);
+  }
+}
+
+/* Skater hold — side hop + freeze */
+.demo-skate .sa-root {
+  animation: sa-skate-body 1.6s ease-in-out infinite;
+}
+.demo-skate .sa-leg-l {
+  animation: sa-skate-leg-l 1.6s ease-in-out infinite;
+}
+.demo-skate .sa-leg-r {
+  animation: sa-skate-leg-r 1.6s ease-in-out infinite;
+}
+.demo-skate .sa-arm-l,
+.demo-skate .sa-arm-r {
+  animation: sa-skate-arms 1.6s ease-in-out infinite;
+}
+.demo-slot:has(.demo-skate) .pace-ball {
+  animation-duration: 1.6s;
+}
+
+@keyframes sa-skate-body {
+  0%,
+  20% {
+    transform: translateX(-16px);
+  }
+  35% {
+    transform: translateX(0) translateY(-10px);
+  }
+  50%,
+  90% {
+    transform: translateX(16px);
+  }
+  100% {
+    transform: translateX(-16px);
+  }
+}
+@keyframes sa-skate-leg-l {
+  0%,
+  45% {
+    transform: rotate(0);
+  }
+  50%,
+  90% {
+    transform: rotate(25deg) translate(-6px, -4px);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
+@keyframes sa-skate-leg-r {
+  0%,
+  20% {
+    transform: rotate(-20deg) translate(4px, -4px);
+  }
+  50%,
+  90% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(-20deg) translate(4px, -4px);
+  }
+}
+@keyframes sa-skate-arms {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+/* Lateral pogo / ski / chaotic */
+.demo-lateral .sa-root {
+  animation: sa-lat-body 0.7s ease-in-out infinite;
+}
+.demo-lateral .sa-arm-l {
+  animation: sa-lat-arm-l 0.7s ease-in-out infinite;
+}
+.demo-lateral .sa-arm-r {
+  animation: sa-lat-arm-r 0.7s ease-in-out infinite;
+}
+.demo-slot:has(.demo-lateral) .pace-ball {
+  animation-duration: 0.7s;
+}
+
+@keyframes sa-lat-body {
+  0%,
+  100% {
+    transform: translateX(-18px) translateY(4px);
+  }
+  50% {
+    transform: translateX(18px) translateY(4px);
+  }
+  25%,
+  75% {
+    transform: translateX(0) translateY(-10px);
+  }
+}
+@keyframes sa-lat-arm-l {
+  0%,
+  100% {
+    transform: rotate(-30deg);
+  }
+  50% {
+    transform: rotate(20deg);
+  }
+}
+@keyframes sa-lat-arm-r {
+  0%,
+  100% {
+    transform: rotate(20deg);
+  }
+  50% {
+    transform: rotate(-30deg);
+  }
+}
+
+/* Lunge switch */
+.demo-lunge .sa-root {
+  animation: sa-lunge-body 1.1s ease-in-out infinite;
+}
+.demo-lunge .sa-leg-l {
+  animation: sa-lunge-leg-l 1.1s ease-in-out infinite;
+}
+.demo-lunge .sa-leg-r {
+  animation: sa-lunge-leg-r 1.1s ease-in-out infinite;
+}
+.demo-lunge .sa-arm-l {
+  animation: sa-lunge-arm-l 1.1s ease-in-out infinite;
+}
+.demo-lunge .sa-arm-r {
+  animation: sa-lunge-arm-r 1.1s ease-in-out infinite;
+}
+.demo-slot:has(.demo-lunge) .pace-ball {
+  animation-duration: 1.1s;
+}
+
+@keyframes sa-lunge-body {
+  0%,
+  100% {
+    transform: translateY(4px) rotate(-4deg);
+  }
+  45% {
+    transform: translateY(-16px) rotate(0);
+  }
+  55% {
+    transform: translateY(4px) rotate(4deg);
+  }
+}
+@keyframes sa-lunge-leg-l {
+  0%,
+  40% {
+    transform: rotate(-28deg) translate(-4px, 0);
+  }
+  60%,
+  100% {
+    transform: rotate(28deg) translate(4px, 0);
+  }
+}
+@keyframes sa-lunge-leg-r {
+  0%,
+  40% {
+    transform: rotate(28deg) translate(4px, 0);
+  }
+  60%,
+  100% {
+    transform: rotate(-28deg) translate(-4px, 0);
+  }
+}
+@keyframes sa-lunge-arm-l {
+  0%,
+  40% {
+    transform: rotate(25deg);
+  }
+  60%,
+  100% {
+    transform: rotate(-25deg);
+  }
+}
+@keyframes sa-lunge-arm-r {
+  0%,
+  40% {
+    transform: rotate(-25deg);
+  }
+  60%,
+  100% {
+    transform: rotate(25deg);
+  }
+}
+
+/* Squat jump */
+.demo-jump .sa-root {
+  animation: sa-jump-body 1.2s ease-in-out infinite;
+}
+.demo-jump .sa-leg-l,
+.demo-jump .sa-leg-r {
+  animation: sa-jump-legs 1.2s ease-in-out infinite;
+}
+.demo-jump .sa-arm-l {
+  animation: sa-jump-arm-l 1.2s ease-in-out infinite;
+}
+.demo-jump .sa-arm-r {
+  animation: sa-jump-arm-r 1.2s ease-in-out infinite;
+}
+.demo-slot:has(.demo-jump) .pace-ball {
+  animation-duration: 1.2s;
+}
+
+@keyframes sa-jump-body {
+  0%,
+  15% {
+    transform: translateY(10px) scaleY(0.88);
+  }
+  40% {
+    transform: translateY(-22px) scaleY(1.06);
+  }
+  55%,
+  100% {
+    transform: translateY(8px) scaleY(0.92);
+  }
+}
+@keyframes sa-jump-legs {
+  0%,
+  15% {
+    transform: scaleY(0.8);
+  }
+  40% {
+    transform: scaleY(1.05);
+  }
+  55%,
+  100% {
+    transform: scaleY(0.85);
+  }
+}
+@keyframes sa-jump-arm-l {
+  0%,
+  15% {
+    transform: rotate(20deg);
+  }
+  40% {
+    transform: rotate(-35deg);
+  }
+  55%,
+  100% {
+    transform: rotate(15deg);
+  }
+}
+@keyframes sa-jump-arm-r {
+  0%,
+  15% {
+    transform: rotate(-20deg);
+  }
+  40% {
+    transform: rotate(35deg);
+  }
+  55%,
+  100% {
+    transform: rotate(-15deg);
+  }
+}
+
+/* Core holds / marches — gentle pulse + limb reach */
+.demo-core .sa-root {
+  animation: sa-core-body 1.6s ease-in-out infinite;
+}
+.demo-core .sa-arm-l {
+  animation: sa-core-arm-l 1.6s ease-in-out infinite;
+}
+.demo-core .sa-arm-r {
+  animation: sa-core-arm-r 1.6s ease-in-out infinite;
+}
+.demo-core .sa-leg-l {
+  animation: sa-core-leg-l 1.6s ease-in-out infinite;
+}
+.demo-core .sa-leg-r {
+  animation: sa-core-leg-r 1.6s ease-in-out infinite;
+}
+.demo-slot:has(.demo-core) .pace-ball {
+  animation-duration: 1.6s;
+}
+
+@keyframes sa-core-body {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+@keyframes sa-core-arm-l {
+  0%,
+  100% {
+    transform: rotate(-40deg) translate(-2px, -6px);
+  }
+  50% {
+    transform: rotate(-10deg);
+  }
+}
+@keyframes sa-core-arm-r {
+  0%,
+  100% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(40deg) translate(2px, -6px);
+  }
+}
+@keyframes sa-core-leg-l {
+  0%,
+  100% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(-30deg) translate(-2px, -8px);
+  }
+}
+@keyframes sa-core-leg-r {
+  0%,
+  100% {
+    transform: rotate(-30deg) translate(2px, -8px);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+}
+
+/* Iso holds — squat / wall-sit / balance stillness with micro sway */
+.demo-iso .sa-root {
+  animation: sa-iso-body 2s ease-in-out infinite;
+}
+.demo-iso .sa-leg-l,
+.demo-iso .sa-leg-r {
+  transform: scaleY(0.82);
+}
+.demo-iso .sa-arm-l {
+  transform: rotate(-35deg);
+}
+.demo-iso .sa-arm-r {
+  transform: rotate(35deg);
+}
+.demo-iso .sa-torso-g {
+  transform: translateY(6px);
+}
+.demo-slot:has(.demo-iso) .pace-ball {
+  animation-duration: 2s;
+}
+
+@keyframes sa-iso-body {
+  0%,
+  100% {
+    transform: translateY(8px) scaleY(0.96);
+  }
+  50% {
+    transform: translateY(10px) scaleY(0.94);
+  }
+}
+
+.cue-banner {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  margin: 8px 0 16px;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.progress-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ice-200);
+}
+
+.progress-dots span.on {
+  background: var(--teal);
+}
+
+.progress-dots span.done {
+  background: var(--ok);
+}
+
+/* Library */
+.workout-card {
+  cursor: pointer;
+}
+
+.workout-card:hover {
+  border-color: var(--ice-400);
+}
+
+.ex-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0 0;
+}
+
+.ex-list li {
+  padding: 10px 0;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.ex-list li:first-child {
+  border-top: none;
+}
+
+.swap-panel {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.segment {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.segment button {
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid var(--ice-200);
+  background: white;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--ice-700);
+  cursor: pointer;
+}
+
+.segment button.active {
+  border-color: var(--teal);
+  background: var(--ice-100);
+  color: var(--ice-800);
+  box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.2);
+}
+
+.empty-hint {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.screen-title {
+  font-family: var(--display);
+  font-size: 1.4rem;
+  margin: 8px 0 4px;
+  color: var(--ice-800);
+}
+
+
+/* Carl curriculum extras */
+.pill.hard {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+.pill.soft {
+  background: #ecfdf5;
+  color: #047857;
+}
+.session-num.soft {
+  background: linear-gradient(145deg, #14b8a6, #34d399);
+}
+.pool-heading {
+  margin: 18px 0 8px;
+  font-family: var(--display);
+  color: var(--ice-800);
+  font-size: 1.05rem;
+}
+.cue-list {
+  margin: 8px 0 14px;
+  padding-left: 1.2rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.cue-list li { margin: 2px 0; }
+

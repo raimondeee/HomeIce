@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "audience": "10U-12U",
+  "surface": "carpet-or-mat",
+  "source": "curriculum/01-exercise-library.md",
+  "ids": [
+    "snap-downs",
+    "high-knees",
+    "linear-pogos",
+    "power-skips",
+    "skater-hops-hold",
+    "lateral-pogos",
+    "jumping-lunges",
+    "squat-jumps",
+    "athletic-stance",
+    "hop-and-stick",
+    "single-leg-balance",
+    "dead-bug",
+    "bird-dog",
+    "wall-sit",
+    "bodyweight-squat",
+    "light-skips",
+    "lateral-ski-jumps",
+    "chaotic-hops",
+    "bear-crawl",
+    "glute-bridge-march",
+    "multi-directional-jumps",
+    "side-plank-lifts"
+  ],
+  "pools": {
+    "warmup": [
+      "athletic-stance",
+      "high-knees",
+      "light-skips",
+      "snap-downs"
+    ],
+    "landing": [
+      "snap-downs",
+      "hop-and-stick",
+      "single-leg-balance",
+      "athletic-stance"
+    ],
+    "bounce-linear": [
+      "linear-pogos",
+      "power-skips",
+      "light-skips"
+    ],
+    "bounce-lateral": [
+      "lateral-pogos",
+      "lateral-ski-jumps",
+      "chaotic-hops",
+      "multi-directional-jumps"
+    ],
+    "hard-linear": [
+      "squat-jumps",
+      "jumping-lunges"
+    ],
+    "hard-lateral": [
+      "skater-hops-hold"
+    ],
+    "core": [
+      "dead-bug",
+      "bird-dog",
+      "glute-bridge-march",
+      "bear-crawl",
+      "side-plank-lifts"
+    ],
+    "lower-iso": [
+      "wall-sit",
+      "bodyweight-squat"
+    ]
+  },
+  "skip_auto_pick": [
+    "ladder drills",
+    "puck/pass/shoot",
+    "depth drops",
+    "box jumps",
+    "hurdle hops",
+    "jump-rope",
+    "burpees as main plyo"
+  ]
+}

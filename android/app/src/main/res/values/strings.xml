@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">HomeIce</string>
+    <string name="title_activity_main">HomeIce</string>
+    <string name="package_name">com.robertraimondi.homeice</string>
+    <string name="custom_url_scheme">com.robertraimondi.homeice</string>
+</resources>
